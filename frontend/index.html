@@ -1,0 +1,98 @@
+<!-- index.html -->
+<!-- Frontend for the Production System Monitoring Platform -->
+<!-- Day 48: basic page that fetches and displays monitored services -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>System Monitoring Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 {
+      color: #4caf50;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background: #333;
+    }
+    .up {
+      color: #4caf50;
+      font-weight: bold;
+    }
+    .down {
+      color: #f44336;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>System Monitoring Platform</h1>
+  <p id="health-status">Checking backend health...</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Service Name</th>
+        <th>Status</th>
+        <th>Uptime (seconds)</th>
+      </tr>
+    </thead>
+    <tbody id="services-table-body">
+      <!-- Rows get filled in by JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    const API_BASE = "http://localhost:5000";
+
+    // Check backend health
+    fetch(`${API_BASE}/health`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("health-status").textContent =
+          `Backend status: ${data.status}`;
+      })
+      .catch(() => {
+        document.getElementById("health-status").textContent =
+          "Backend is unreachable";
+      });
+
+    // Fetch and display monitored services
+    fetch(`${API_BASE}/services`)
+      .then(res => res.json())
+      .then(services => {
+        const tbody = document.getElementById("services-table-body");
+        services.forEach(service => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${service.name}</td>
+            <td class="${service.status}">${service.status}</td>
+            <td>${service.uptime_seconds}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load services:", err);
+      });
+  </script>
+
+</body>
+</html>
