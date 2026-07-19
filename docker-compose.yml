@@ -1,0 +1,40 @@
+# docker-compose.yml
+# Orchestrates backend, frontend, and PostgreSQL database
+
+
+services:
+  database:
+    image: postgres:15
+    container_name: monitoring-db
+    environment:
+      POSTGRES_DB: monitoring_platform
+      POSTGRES_USER: monitor_user
+      POSTGRES_PASSWORD: monitor_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: monitoring-backend
+    environment:
+      DB_HOST: database
+      DB_NAME: monitoring_platform
+      DB_USER: monitor_user
+      DB_PASSWORD: monitor_pass
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend
+    container_name: monitoring-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
