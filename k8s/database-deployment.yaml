@@ -29,3 +29,10 @@ spec:
               value: monitor_user
             - name: POSTGRES_PASSWORD
               value: monitor_pass
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: database-pvc
