@@ -24,10 +24,22 @@ spec:
             - containerPort: 5000
           env:
             - name: DB_HOST
-              value: database
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_HOST
             - name: DB_NAME
-              value: monitoring_platform
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_NAME
             - name: DB_USER
-              value: monitor_user
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_USER
             - name: DB_PASSWORD
-              value: monitor_pass
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_PASSWORD
