@@ -1,0 +1,10 @@
+# backend-configmap.yaml
+# Non-sensitive configuration for the backend
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  DB_HOST: "database"
+  DB_NAME: "monitoring_platform"
