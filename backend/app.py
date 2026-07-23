@@ -1,6 +1,8 @@
 # app.py
 # Backend API for the Production System Monitoring Platform
 # Day 47: connected to PostgreSQL, /services now reads from the database
+# Day 48: added CORS support so the frontend can call this API
+# Day 53: prefixed all routes with /api for Ingress routing
 
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -11,7 +13,6 @@ app = Flask(__name__)
 CORS(app)
 
 # Database connection settings
-# Using environment variables with fallback defaults for local dev
 DB_HOST = os.environ.get("DB_HOST", "localhost")
 DB_NAME = os.environ.get("DB_NAME", "monitoring_platform")
 DB_USER = os.environ.get("DB_USER", "monitor_user")
@@ -26,7 +27,6 @@ def get_db_connection():
     )
     return conn
 
-# Create the services table if it doesn't already exist
 def init_db():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -43,20 +43,20 @@ def init_db():
     conn.close()
 
 # Root route - just confirms the API is alive and gives basic info
-@app.route("/")
+@app.route("/api/")
 def index():
     return jsonify({
         "service": "production-monitoring-platform-backend",
         "status": "running"
     })
 
-# Health check route - used by Kubernetes liveness/readiness probes later
-@app.route("/health")
+# Health check route - used by Kubernetes liveness/readiness probes
+@app.route("/api/health")
 def health():
     return jsonify({"status": "healthy"}), 200
 
-# Services route - now reads from the PostgreSQL database
-@app.route("/services")
+# Services route - reads from the PostgreSQL database
+@app.route("/api/services")
 def services():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -72,7 +72,7 @@ def services():
     return jsonify(result), 200
 
 # Metrics route - placeholder for now
-@app.route("/metrics")
+@app.route("/api/metrics")
 def metrics():
     return jsonify({"message": "metrics endpoint placeholder, coming soon"}), 200
 
