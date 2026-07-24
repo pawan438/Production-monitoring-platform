@@ -43,3 +43,15 @@ spec:
                 secretKeyRef:
                   name: backend-secret
                   key: DB_PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
