@@ -1,0 +1,27 @@
+# values.yaml
+# Default configuration values for the monitoring platform Helm chart
+
+backend:
+  image: pawan977/monitoring-backend
+  tag: latest
+  port: 5000
+  replicas: 1
+
+frontend:
+  image: pawan977/monitoring-frontend
+  tag: latest
+  port: 80
+  replicas: 1
+
+database:
+  image: postgres
+  tag: "15"
+  port: 5432
+  name: monitoring_platform
+  user: monitor_user
+  password: monitor_pass
+  storage: 1Gi
+
+ingress:
+  enabled: true
+  className: nginx
