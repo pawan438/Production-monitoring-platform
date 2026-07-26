@@ -1,0 +1,21 @@
+# argocd-application.yaml
+# Tells Argo CD to sync the monitoring-chart from this repo
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-platform
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/pawan438/production-monitoring-platform.git
+    targetRevision: main
+    path: monitoring-chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
