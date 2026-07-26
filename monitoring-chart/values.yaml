@@ -11,7 +11,7 @@ frontend:
   image: pawan977/monitoring-frontend
   tag: latest
   port: 80
-  replicas: 1
+  replicas: 2
 
 database:
   image: postgres
